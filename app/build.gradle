@@ -31,4 +31,5 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.3.1'
     compile 'com.squareup.okio:okio:1.8.0'
     compile 'com.koushikdutta.ion:ion:2.1.8'
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v1.8.5'
 }
