@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:checked="true"
+            android:id="@+id/nav_android"
+            android:icon="@drawable/nav_android"
+            android:title="Android" />
+        <item
+            android:id="@+id/nav_ios"
+            android:icon="@drawable/nav_ios"
+            android:title="IOS" />
+        <item
+            android:id="@+id/nav_mac"
+            android:icon="@drawable/nav_mac"
+            android:title="Mac" />
+        <item
+            android:id="@+id/nav_device"
+            android:icon="@drawable/nav_device"
+            android:title="硬件" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_delete"
+                android:icon="@drawable/nav_delete"
+                android:title="清除缓存" />
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/nav_about"
+                android:title="关于" />
+        </menu>
+    </item>
+
+</menu>

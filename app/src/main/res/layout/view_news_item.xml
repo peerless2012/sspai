@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:orientation="horizontal"
+    card_view:cardElevation="10dp"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    card_view:cardCornerRadius="5dp" >
+<LinearLayout
+    android:showDividers="middle|end"
+    android:divider="@drawable/news_divider"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+    <com.peerless2012.sspai.view.widget.PercentFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:HeightPercent="0.5">
+        <ImageView
+            android:background="#FF0000"
+            android:scaleType="centerCrop"
+            android:src="@drawable/net"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </com.peerless2012.sspai.view.widget.PercentFrameLayout>
+
+    <TextView
+        android:singleLine="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:textSize="@dimen/text_size_title"
+        android:text="Viridi,在你的手机里养一颗多肉植物吧"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:textSize="@dimen/text_size_content"
+        android:text="Viridi 是一款让你在手机里养殖多肉植物的游戏，你可以随时在手机中照料你的多肉植物，并从中体会到身心的放松和愉悦。"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
+</android.support.v7.widget.CardView>
