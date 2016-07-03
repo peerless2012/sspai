@@ -26,10 +26,20 @@ public class NewsType implements Parcelable{
     @Expose
     private String newsTag;
 
+    @SerializedName("topicTag")
+    @Expose
+    private String topicTag;
+
+    @SerializedName("topicId")
+    @Expose
+    private int topicId;
+
     protected NewsType(Parcel in) {
         typeId = in.readInt();
         typeName = in.readString();
         newsTag = in.readString();
+        topicTag = in.readString();
+        topicId = in.readInt();
     }
 
     public int getTypeId() {
@@ -56,11 +66,29 @@ public class NewsType implements Parcelable{
         this.newsTag = newsTag;
     }
 
+    public String getTopicTag() {
+        return topicTag;
+    }
+
+    public void setTopicTag(String topicTag) {
+        this.topicTag = topicTag;
+    }
+
+    public int getTopicId() {
+        return topicId;
+    }
+
+    public void setTopicId(int topicId) {
+        this.topicId = topicId;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(typeId);
         dest.writeString(typeName);
         dest.writeString(newsTag);
+        dest.writeString(topicTag);
+        dest.writeInt(topicId);
     }
 
     @Override
