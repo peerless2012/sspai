@@ -1,12 +1,14 @@
 package com.peerless2012.sspai.base;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 /**
 * @Author peerless2012
 * @Email peerless2012@126.com
@@ -26,8 +28,8 @@ public abstract class BaseFragment extends Fragment{
 	@Override
 	final public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		onSaveInstance(savedInstanceState);
 		boolean isNewCreate = mRootView == null;
-		onSaveInstanceState(savedInstanceState);
 		if (mRootView == null || !needSaveView()) {
 			int layoutRes = getViewLayoutRes();
 			if (layoutRes > 0) {
@@ -54,7 +56,7 @@ public abstract class BaseFragment extends Fragment{
 	 * 如果你想获取saveinstance，可以重写此方法
 	 * @param savedInstanceState
 	 */
-	protected void onSaveInstace(Bundle savedInstanceState){
+	protected void onSaveInstance(Bundle savedInstanceState){
 		// do nothing
 	}
 	
@@ -120,5 +122,13 @@ public abstract class BaseFragment extends Fragment{
 	@SuppressWarnings("unchecked")
 	protected <T extends View> T getView(View parent,int viewResId) {
 		return (T)parent.findViewById(viewResId);
+	}
+
+	protected void toast(@StringRes int resId){
+		toast(getString(resId));
+	}
+
+	protected void toast(String str){
+		Toast.makeText(getActivity().getApplication(),str,Toast.LENGTH_LONG).show();
 	}
 }

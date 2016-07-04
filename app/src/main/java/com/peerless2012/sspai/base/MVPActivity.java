@@ -16,8 +16,8 @@ public abstract class MVPActivity<V,P extends BasePresenter<V>> extends BaseActi
 
     @CallSuper
     @Override
-    protected void onSaveInstace(Bundle savedInstanceState) {
-        super.onSaveInstace(savedInstanceState);
+    protected void onSaveInstance(Bundle savedInstanceState) {
+        super.onSaveInstance(savedInstanceState);
         mPresenter = getPresenter();
         if (mPresenter != null) mPresenter.attach(getPresenterView());
     }

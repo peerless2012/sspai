@@ -17,8 +17,8 @@ public abstract class MVPFragment<V,P extends BasePresenter<V>> extends BaseFrag
     protected P mPresenter;
 
     @Override
-    protected void onSaveInstace(Bundle savedInstanceState) {
-        super.onSaveInstace(savedInstanceState);
+    protected void onSaveInstance(Bundle savedInstanceState) {
+        super.onSaveInstance(savedInstanceState);
         mPresenter = getPresenter();
         if (mPresenter != null) mPresenter.attach(getPresenterView());
     }

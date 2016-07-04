@@ -3,12 +3,15 @@ package com.peerless2012.sspai.base;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import com.peerless2012.sspai.R;
 import java.io.File;
 
@@ -25,7 +28,7 @@ import java.io.File;
     protected Toolbar toolbar;
     @Override
     final protected void onCreate(Bundle savedInstanceState) {
-        onSaveInstace(savedInstanceState);
+        onSaveInstance(savedInstanceState);
         super.onCreate(savedInstanceState);
         initActivity();
         initView();
@@ -36,7 +39,7 @@ import java.io.File;
      * 如果你想获取saveinstance，可以重写此方法
      * @param savedInstanceState
      */
-    protected void onSaveInstace(Bundle savedInstanceState){
+    protected void onSaveInstance(Bundle savedInstanceState){
         // do nothing
     }
 
@@ -136,5 +139,13 @@ import java.io.File;
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    protected void toast(@StringRes int resId){
+        toast(getString(resId));
+    }
+
+    protected void toast(String str){
+        Toast.makeText(getApplicationContext(),str,Toast.LENGTH_LONG).show();
     }
 }
