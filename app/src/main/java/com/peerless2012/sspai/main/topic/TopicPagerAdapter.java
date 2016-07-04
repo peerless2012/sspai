@@ -1,6 +1,7 @@
 package com.peerless2012.sspai.main.topic;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -30,7 +31,9 @@ public class TopicPagerAdapter extends FragmentPagerAdapter{
 
     @Override
     public Fragment getItem(int position) {
-        return Fragment.instantiate(mContext,NewsFragment.class.getName(),null);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(NewsFragment.NEWS_TYPE,mNewsTypes.get(position));
+        return Fragment.instantiate(mContext,NewsFragment.class.getName(),bundle);
     }
 
     @Override

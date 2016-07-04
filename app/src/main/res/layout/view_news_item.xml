@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         app:HeightPercent="0.5">
         <ImageView
+            android:id="@+id/news_img"
             android:background="#FF0000"
             android:scaleType="centerCrop"
             android:src="@drawable/net"
@@ -31,6 +32,7 @@
     </com.peerless2012.sspai.view.widget.PercentFrameLayout>
 
     <TextView
+        android:id="@+id/news_title"
         android:singleLine="true"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -40,6 +42,7 @@
         android:layout_height="wrap_content"/>
 
     <TextView
+        android:id="@+id/news_desc"
         android:maxLines="2"
         android:ellipsize="end"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"

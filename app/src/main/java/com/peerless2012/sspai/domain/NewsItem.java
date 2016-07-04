@@ -20,6 +20,10 @@ public class NewsItem implements Parcelable{
     @Expose
     private int id;
 
+    @SerializedName("url")
+    @Expose
+    private String url;
+
     @SerializedName("title")
     @Expose
     private String newsTitle;
@@ -50,6 +54,10 @@ public class NewsItem implements Parcelable{
     @Expose
     private int likeCount;
 
+    @SerializedName("comment_count")
+    @Expose
+    private int commentCount;
+
     @SerializedName("favorite_count")
     @Expose
     private int favoriteCount;
@@ -68,6 +76,7 @@ public class NewsItem implements Parcelable{
 
     protected NewsItem(Parcel in) {
         id = in.readInt();
+        url = in.readString();
         newsTitle = in.readString();
         newsDescription = in.readString();
         views = in.readInt();
@@ -75,6 +84,7 @@ public class NewsItem implements Parcelable{
         createdTime = in.readLong();
         modifiedTime = in.readLong();
         likeCount = in.readInt();
+        commentCount = in.readInt();
         favoriteCount = in.readInt();
         imgUrlses = in.createTypedArrayList(ImgUrls.CREATOR);
         authors = in.createTypedArrayList(Author.CREATOR);
@@ -84,6 +94,7 @@ public class NewsItem implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
+        dest.writeString(url);
         dest.writeString(newsTitle);
         dest.writeString(newsDescription);
         dest.writeInt(views);
@@ -91,6 +102,7 @@ public class NewsItem implements Parcelable{
         dest.writeLong(createdTime);
         dest.writeLong(modifiedTime);
         dest.writeInt(likeCount);
+        dest.writeInt(commentCount);
         dest.writeInt(favoriteCount);
         dest.writeTypedList(imgUrlses);
         dest.writeTypedList(authors);
@@ -120,6 +132,14 @@ public class NewsItem implements Parcelable{
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getNewsTitle() {
@@ -176,6 +196,14 @@ public class NewsItem implements Parcelable{
 
     public void setLikeCount(int likeCount) {
         this.likeCount = likeCount;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
     }
 
     public int getFavoriteCount() {

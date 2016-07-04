@@ -1,100 +1,128 @@
 [
   {
-    "topicId":1,
-    "topicName":"Android",
-    "topicTag":"Android",
-    "newsTypes":[
+    "topicId": 1,
+    "topicName": "Android",
+    "topicTag": "android",
+    "newsTypes": [
       {
-        "typeId":1,
-        "typeName":"手机",
-        "newsTag":"Android_Phone"
-      }
-      ,{
-        "typeId":2,
-        "typeName":"应用",
-        "newsTag":"Android_App"
-      }
-      ,{
-        "typeId":3,
-        "typeName":"游戏",
-        "newsTag":"Android_Game"
-      }
-      ,{
-        "typeId":4,
-        "typeName":"教程",
-        "newsTag":"Android_Course"
-      }
-    ]
-  }
-  ,{
-  "topicId":2,
-  "topicName":"IOS",
-  "topicTag":"IOS",
-  "newsTypes":[
-    {
-      "typeId":1,
-      "typeName":"iPhone",
-      "newsTag":"IOS_Phone"
-    }
-    ,{
-        "typeId":2,
-        "typeName":"iPad",
-        "newsTag":"IOS_Pad"
-      }
-    ,{
-        "typeId":3,
-        "typeName":"应用",
-        "newsTag":"IOS_App"
-      }
-    ,{
-        "typeId":4,
-        "typeName":"游戏",
-        "newsTag":"IOS_Game"
-      }
-    ,{
-        "typeId":5,
-        "typeName":"教程",
-        "newsTag":"IOS_Course"
+        "typeId": 1,
+        "typeName": "手机",
+        "newsTag": "Android_Phone",
+        "topicTag": "android",
+        "topicId": 1
+      },
+      {
+        "typeId": 2,
+        "typeName": "应用",
+        "newsTag": "Android_App",
+        "topicTag": "android",
+        "topicId": 1
+      },
+      {
+        "typeId": 3,
+        "typeName": "游戏",
+        "newsTag": "Android_Game",
+        "topicTag": "android",
+        "topicId": 1
+      },
+      {
+        "typeId": 4,
+        "typeName": "教程",
+        "newsTag": "Android_Course",
+        "topicTag": "android",
+        "topicId": 1
       }
     ]
-  }
-  ,{
-  "topicId":3,
-  "topicName":"Mac",
-  "topicTag":"Mac",
-  "newsTypes":[
-    {
-      "typeId":1,
-      "typeName":"Macbook",
-      "newsTag":"MAC_MacBook"
-    }
-    ,{
-        "typeId":2,
-        "typeName":"Mac",
-        "newsTag":"MAC_Mac"
-      }
-    ,{
-        "typeId":3,
-        "typeName":"应用",
-        "newsTag":"MAC_App"
-      }
-    ,{
-        "typeId":4,
-        "typeName":"教程",
-        "newsTag":"MAC_Course"
+  },
+  {
+    "topicId": 2,
+    "topicName": "IOS",
+    "topicTag": "iOS",
+    "newsTypes": [
+      {
+        "typeId": 1,
+        "typeName": "iPhone",
+        "newsTag": "IOS_Phone",
+        "topicTag": "iOS",
+        "topicId": 2
+      },
+      {
+        "typeId": 2,
+        "typeName": "iPad",
+        "newsTag": "IOS_Pad",
+        "topicTag": "iOS",
+        "topicId": 2
+      },
+      {
+        "typeId": 3,
+        "typeName": "应用",
+        "newsTag": "IOS_App",
+        "topicTag": "iOS",
+        "topicId": 2
+      },
+      {
+        "typeId": 4,
+        "typeName": "游戏",
+        "newsTag": "IOS_Game",
+        "topicTag": "iOS",
+        "topicId": 2
+      },
+      {
+        "typeId": 5,
+        "typeName": "教程",
+        "newsTag": "IOS_Course",
+        "topicTag": "iOS",
+        "topicId": 2
       }
     ]
-  }
-  ,{
-  "topicId":1,
-  "topicName":"硬件",
-  "topicTag":"HardWare",
-  "newsTypes":[
-    {
-      "typeId":1,
-      "typeName":"硬件",
-      "newsTag":"HardWare_HardWare"
-    }
+  },
+  {
+    "topicId": 3,
+    "topicName": "Mac",
+    "topicTag": "Mac",
+    "newsTypes": [
+      {
+        "typeId": 1,
+        "typeName": "Macbook",
+        "newsTag": "MAC_MacBook",
+        "topicTag": "Mac",
+        "topicId": 3
+      },
+      {
+        "typeId": 2,
+        "typeName": "Mac",
+        "newsTag": "MAC_Mac",
+        "topicTag": "Mac",
+        "topicId": 3
+      },
+      {
+        "typeId": 3,
+        "typeName": "应用",
+        "newsTag": "MAC_App",
+        "topicTag": "Mac",
+        "topicId": 3
+      },
+      {
+        "typeId": 4,
+        "typeName": "教程",
+        "newsTag": "MAC_Course",
+        "topicTag": "Mac",
+        "topicId": 3
+      }
+    ]
+  },
+  {
+    "topicId": 4,
+    "topicName": "硬件",
+    "topicTag": "%E7%A1%AC%E4%BB%B6",
+    "newsTypes": [
+      {
+        "typeId": 1,
+        "typeName": "硬件",
+        "newsTag": "HardWare_HardWare",
+        "topicTag": "%E7%A1%AC%E4%BB%B6",
+        "topicId": 4
+      }
     ]
   }
 ]

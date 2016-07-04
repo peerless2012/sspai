@@ -7,7 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import com.peerless2012.sspai.R;
 import com.peerless2012.sspai.base.MVPActivity;
-import com.peerless2012.sspai.domain.NewsInfo;
+import com.peerless2012.sspai.domain.NewsItem;
 
 public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetailView,NewsDetailContract.NewsDetailPresenter>
                                 implements NewsDetailContract.NewsDetailView{
@@ -40,7 +40,7 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
 
     }
 
-    public static void launch(Context context, NewsInfo newsInfo){
+    public static void launch(Context context, NewsItem newsItem){
         Intent intent = new Intent(context,NewsDetailActivity.class);
         context.startActivity(intent);
     }
@@ -52,7 +52,7 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
 
     @Override
     public NewsDetailContract.NewsDetailPresenter getPresenter() {
-        return null;
+        return new NewsDetailPresenter(this);
     }
 
     @Override

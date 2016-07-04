@@ -43,18 +43,8 @@ public class HttpUtils {
         return inst;  // <<< 注意这里返回的是临时变量
     }
 
-    public void t(){
-        mOkHttpClient.newCall(null).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                response.body().byteStream();
-            }
-        });
+    public OkHttpClient getOkHttpClient(){
+        return mOkHttpClient;
     }
 }
 
