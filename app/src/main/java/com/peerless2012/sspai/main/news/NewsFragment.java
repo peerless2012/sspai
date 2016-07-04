@@ -69,7 +69,7 @@ public class NewsFragment extends MVPFragment<NewsContract.NewsView,NewsContract
         mNewsAdapter.setOnRecyclerViewItemClickListener(new BaseQuickAdapter.OnRecyclerViewItemClickListener() {
             @Override
             public void onItemClick(View view, int i) {
-                NewsDetailActivity.launch(getContext(),null);
+                NewsDetailActivity.launch(getContext(),mNewsAdapter.getItem(i));
             }
         });
         mNewsAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
