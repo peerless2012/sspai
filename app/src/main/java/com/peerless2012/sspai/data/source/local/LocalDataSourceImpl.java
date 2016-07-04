@@ -1,15 +1,20 @@
 package com.peerless2012.sspai.data.source.local;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.peerless2012.sspai.R;
 import com.peerless2012.sspai.data.callback.SimpleCallBack;
 import com.peerless2012.sspai.data.source.LocalDataSource;
+import com.peerless2012.sspai.data.source.local.entry.ArticleEntry;
 import com.peerless2012.sspai.data.threads.ExecutorCallBack;
 import com.peerless2012.sspai.data.threads.ExecutorRunnable;
 import com.peerless2012.sspai.data.threads.WorkExecutor;
+import com.peerless2012.sspai.domain.Article;
+import com.peerless2012.sspai.domain.NewsType;
 import com.peerless2012.sspai.domain.Topic;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,14 +29,16 @@ import java.util.List;
  * @Version V1.0
  * @Description :
  */
-public class LocalDataSourceImpl implements LocalDataSource{
+public class LocalDataSourceImpl extends BaseLocalDataSource implements LocalDataSource{
 
     private static volatile LocalDataSourceImpl sInst = null;  // <<< 这里添加了 volatile
 
     private Context mContext;
-
-    private LocalDataSourceImpl(Context context) {
+    ArticleEntry mArticleEntry;
+    public LocalDataSourceImpl(Context context) {
+        super(SSPaiDBHelper.getInstance(context.getApplicationContext()));
         mContext = context.getApplicationContext();
+        mArticleEntry = new ArticleEntry();
     }
 
     public static LocalDataSourceImpl getInstance(Context context) {
@@ -74,6 +81,67 @@ public class LocalDataSourceImpl implements LocalDataSource{
             }
         }));
     }
+
+    @Override
+    public void loadNews(final NewsType newsType, int pageIndex, final SimpleCallBack<List<Article>> callBack) {
+        WorkExecutor.getInstance().execute(new ExecutorRunnable<List<Article>>(new ExecutorCallBack<List<Article>>() {
+            @Override
+            public List<Article> doInBackground() {
+                synchronized (LOCK){
+                    List<Article> articleList = null;
+                    SQLiteDatabase database = null;
+                        try {
+                            database = getWritableDatabase();
+                            Cursor cursor = database.query(ArticleEntry.TABLE_NAME,
+                                null,ArticleEntry._TOPIC_ID +" = ? AND "+ArticleEntry._NEWS_TYPE_ID+" = ?"
+                                ,new String[]{String.valueOf(newsType.getTopicId()),String.valueOf(newsType.getTypeId())}
+                                ,null,null,ArticleEntry._ARTICLE_ID + " DESC","20");
+
+                        if (cursor != null && cursor.getCount() > 0){
+                            articleList = mArticleEntry.buildAll(cursor);
+                        }
+                        return articleList;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        closeDatabase(database);
+                    }
+                    return null;
+                }
+            }
+
+            @Override
+            public void onPostExecute(List<Article> articles) {
+                if (callBack != null) callBack.onLoaded(articles);
+            }
+        }));
+    }
+
+    @Override
+    public void saveNews(List<Article> articles) {
+        if (articles == null || articles.size() == 0) return;
+        synchronized (LOCK){
+            SQLiteDatabase database = null;
+            try {
+                database = getWritableDatabase();
+                database.beginTransaction();
+                Article article;
+                for (int i = 0; i < articles.size(); i++) {
+                    article = articles.get(i);
+                    database.delete(ArticleEntry.TABLE_NAME,ArticleEntry._ARTICLE_ID + " = ?",new String[]{article.getArticleId()});
+                    database.insert(ArticleEntry.TABLE_NAME,null,mArticleEntry.deconstruct(article));
+                }
+                database.setTransactionSuccessful();
+            }catch (Exception e){
+                e.printStackTrace();
+            }finally {
+                if (database != null) database.endTransaction();
+                closeDatabase(database);
+            }
+        }
+    }
+
+
 }
 
 

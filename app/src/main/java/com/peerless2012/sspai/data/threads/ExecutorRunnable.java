@@ -2,6 +2,11 @@ package com.peerless2012.sspai.data.threads;
 
 import android.os.Handler;
 
+import com.peerless2012.sspai.R;
+import com.peerless2012.sspai.domain.Topic;
+
+import java.util.List;
+
 /**
  * @author peerless2012
  * @Email peerless2012@126.com

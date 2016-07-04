@@ -4,7 +4,15 @@ import android.content.Context;
 import com.peerless2012.sspai.data.callback.SimpleCallBack;
 import com.peerless2012.sspai.data.source.local.LocalDataSourceImpl;
 import com.peerless2012.sspai.data.source.remote.RemoteDataSourceImpl;
+import com.peerless2012.sspai.data.threads.ExecutorCallBack;
+import com.peerless2012.sspai.data.threads.ExecutorRunnable;
+import com.peerless2012.sspai.data.threads.WorkExecutor;
+import com.peerless2012.sspai.domain.Article;
+import com.peerless2012.sspai.domain.NewsItem;
+import com.peerless2012.sspai.domain.NewsType;
 import com.peerless2012.sspai.domain.Topic;
+
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -23,6 +31,8 @@ public class SSPaiRepository implements SSPaiDataSource {
     private RemoteDataSource mRemoteDataSource;
 
     private static volatile SSPaiRepository sInst = null;  // <<< 这里添加了 volatile
+
+    private HashMap<String,List<Article>> mNewsInfosMap = new HashMap<String,List<Article>>();
 
     private SSPaiRepository(Context context) {
         mContext = context.getApplicationContext();
@@ -62,6 +72,61 @@ public class SSPaiRepository implements SSPaiDataSource {
                 }
             });
         }
+    }
+
+    @Override
+    public void loadNews(final NewsType newsType, final int pageIndex,boolean force,final SimpleCallBack<List<Article>> callBack) {
+        List<Article> newsItems = null;
+        // 如果是第一页并且非强制刷新
+        if (!force){
+            if (pageIndex == 1){
+                newsItems = mNewsInfosMap.get(newsType.getNewsTag());
+            }
+
+            if (newsItems != null){
+                callBack.onLoaded(newsItems);
+            }else {
+                mLocalDataSource.loadNews(newsType, pageIndex, new SimpleCallBack<List<Article>>() {
+                    @Override
+                    public void onLoaded(List<Article> articles) {
+                        if (articles != null){
+                            if (pageIndex == 1) mNewsInfosMap.put(newsType.getNewsTag(),articles);
+                            if (callBack != null) callBack.onLoaded(articles);
+                        }else {
+                            loadNewsForce(newsType,pageIndex,callBack);
+                        }
+                    }
+                });
+            }
+        }else {
+            // 可能存在问题，比如由于数据更新，本地数据库的数量并不等于 每页数 * 页数
+            loadNewsForce(newsType,pageIndex,callBack);
+        }
+    }
+
+    public void loadNewsForce(final NewsType newsType, final int pageIndex,final SimpleCallBack<List<Article>> callBack) {
+        mRemoteDataSource.loadNews(newsType, pageIndex, new SimpleCallBack<List<Article>>() {
+            @Override
+            public void onLoaded(final List<Article> articles) {
+                if (articles != null && articles.size() >0){
+                    WorkExecutor.getInstance().execute(new ExecutorRunnable<List<Article>>(new ExecutorCallBack<List<Article>>() {
+                        @Override
+                        public List<Article> doInBackground() {
+                            mLocalDataSource.saveNews(articles);
+                            return articles;
+                        }
+
+                        @Override
+                        public void onPostExecute(List<Article> articles) {
+                            if (callBack != null) {
+                                if (pageIndex == 1) mNewsInfosMap.put(newsType.getNewsTag(),articles);
+                                callBack.onLoaded(articles);
+                            }
+                        }
+                    }));
+                }
+            }
+        });
     }
 }
 
