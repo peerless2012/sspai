@@ -1,6 +1,7 @@
 package com.peerless2012.sspai.data.source;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import com.peerless2012.sspai.data.callback.SimpleCallBack;
 import com.peerless2012.sspai.data.source.local.LocalDataSourceImpl;
 import com.peerless2012.sspai.data.source.remote.RemoteDataSourceImpl;
@@ -8,10 +9,9 @@ import com.peerless2012.sspai.data.threads.ExecutorCallBack;
 import com.peerless2012.sspai.data.threads.ExecutorRunnable;
 import com.peerless2012.sspai.data.threads.WorkExecutor;
 import com.peerless2012.sspai.domain.Article;
-import com.peerless2012.sspai.domain.NewsItem;
+import com.peerless2012.sspai.domain.ArticleDetail;
 import com.peerless2012.sspai.domain.NewsType;
 import com.peerless2012.sspai.domain.Topic;
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -60,22 +60,22 @@ public class SSPaiRepository implements SSPaiDataSource {
     private List<Topic> mTopics;
 
     @Override
-    public void loadNavData(final SimpleCallBack<List<Topic>> simpleCallBack) {
+    public void loadNavData(@NonNull final SimpleCallBack<List<Topic>> simpleCallBack) {
         if (mTopics != null){
-            if (simpleCallBack != null) simpleCallBack.onLoaded(mTopics);
+            simpleCallBack.onLoaded(mTopics);
         }else {
             mLocalDataSource.loadNavData(new SimpleCallBack<List<Topic>>() {
                 @Override
                 public void onLoaded(List<Topic> topics) {
                     mTopics = topics;
-                    if (simpleCallBack != null) simpleCallBack.onLoaded(mTopics);
+                    simpleCallBack.onLoaded(mTopics);
                 }
             });
         }
     }
 
     @Override
-    public void loadNews(final NewsType newsType, final int pageIndex,boolean force,final SimpleCallBack<List<Article>> callBack) {
+    public void loadNews(@NonNull final NewsType newsType, final int pageIndex,boolean force,@NonNull final SimpleCallBack<List<Article>> callBack) {
         List<Article> newsItems = null;
         // 如果是第一页并且非强制刷新
         if (!force){
@@ -91,7 +91,7 @@ public class SSPaiRepository implements SSPaiDataSource {
                     public void onLoaded(List<Article> articles) {
                         if (articles != null){
                             if (pageIndex == 1) mNewsInfosMap.put(newsType.getNewsTag(),articles);
-                            if (callBack != null) callBack.onLoaded(articles);
+                            callBack.onLoaded(articles);
                         }else {
                             loadNewsForce(newsType,pageIndex,callBack);
                         }
@@ -104,7 +104,41 @@ public class SSPaiRepository implements SSPaiDataSource {
         }
     }
 
-    public void loadNewsForce(final NewsType newsType, final int pageIndex,final SimpleCallBack<List<Article>> callBack) {
+    @Override
+    public void loadNewsDetail(@NonNull final Article article, @NonNull final SimpleCallBack<ArticleDetail> callBack) {
+
+        mLocalDataSource.loadNewsDetail(article, new SimpleCallBack<ArticleDetail>() {
+            @Override
+            public void onLoaded(ArticleDetail articleDetail) {
+                if (articleDetail != null){
+                    callBack.onLoaded(articleDetail);
+                }else {
+                    mRemoteDataSource.loadNewsDetail(article,new SimpleCallBack<ArticleDetail>(){
+                        @Override
+                        public void onLoaded(final ArticleDetail articleDetail) {
+                            if (articleDetail != null) {
+                                WorkExecutor.getInstance().execute(new ExecutorRunnable<ArticleDetail>(new ExecutorCallBack<ArticleDetail>() {
+                                    @Override
+                                    public ArticleDetail doInBackground() {
+                                        mLocalDataSource.saveNewsDetail(articleDetail);
+                                        return null;
+                                    }
+
+                                    @Override
+                                    public void onPostExecute(ArticleDetail articleDetail) {
+
+                                    }
+                                }));
+                            }
+                            callBack.onLoaded(articleDetail);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    public void loadNewsForce(@NonNull final NewsType newsType, final int pageIndex,@NonNull final SimpleCallBack<List<Article>> callBack) {
         mRemoteDataSource.loadNews(newsType, pageIndex, new SimpleCallBack<List<Article>>() {
             @Override
             public void onLoaded(final List<Article> articles) {
@@ -118,10 +152,8 @@ public class SSPaiRepository implements SSPaiDataSource {
 
                         @Override
                         public void onPostExecute(List<Article> articles) {
-                            if (callBack != null) {
-                                if (pageIndex == 1) mNewsInfosMap.put(newsType.getNewsTag(),articles);
-                                callBack.onLoaded(articles);
-                            }
+                            if (pageIndex == 1) mNewsInfosMap.put(newsType.getNewsTag(),articles);
+                            callBack.onLoaded(articles);
                         }
                     }));
                 }

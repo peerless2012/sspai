@@ -2,6 +2,7 @@ package com.peerless2012.sspai.data.source.remote;
 
 import android.content.Context;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
@@ -12,6 +13,7 @@ import com.peerless2012.sspai.data.threads.ExecutorCallBack;
 import com.peerless2012.sspai.data.threads.ExecutorRunnable;
 import com.peerless2012.sspai.data.threads.WorkExecutor;
 import com.peerless2012.sspai.domain.Article;
+import com.peerless2012.sspai.domain.ArticleDetail;
 import com.peerless2012.sspai.domain.Articles;
 import com.peerless2012.sspai.domain.News;
 import com.peerless2012.sspai.domain.NewsItem;
@@ -33,6 +35,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -73,7 +76,7 @@ public class RemoteDataSourceImpl implements RemoteDataSource {
     // http://sspai.com/tag/android/?t=%E6%89%8B%E6%9C%BA&page=2
     // http://sspai.com/tag/android/?t=手机&page=2
     @Override
-    public void loadNews(final NewsType newsType, final int pageIndex, final SimpleCallBack<List<Article>> callBack) {
+    public void loadNews(@NonNull final NewsType newsType, final int pageIndex,@NonNull final SimpleCallBack<List<Article>> callBack) {
         WorkExecutor.getInstance().execute(new ExecutorRunnable<List<Article>>(new ExecutorCallBack<List<Article>>() {
             @Override
             public List<Article> doInBackground() {
@@ -207,6 +210,36 @@ public class RemoteDataSourceImpl implements RemoteDataSource {
                 if (callBack != null) callBack.onLoaded(articles);
             }
         }));
+    }
+
+    @Override
+    public void loadNewsDetail(@NonNull final Article article, @NonNull final SimpleCallBack<ArticleDetail> callBack) {
+        OkHttpClient okHttpClient = HttpUtils.getInstance().getOkHttpClient();
+        Request request = new Request.Builder()
+                .get()
+                .url(article.getArticleUrl())
+                .build();
+        Call newCall = okHttpClient.newCall(request);
+        newCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                callBack.onLoaded(null);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response != null && response.code() == 200){
+                    Document document = Jsoup.parse(response.body().string(),"");
+                    Element first = document.getElementsByClass("content").first();
+                    ArticleDetail articleDetail = new ArticleDetail();
+                    articleDetail.setArticleId(article.getArticleId());
+                    articleDetail.setArticleContent(first.html());
+                    callBack.onLoaded(articleDetail);
+                }else {
+                    callBack.onLoaded(null);
+                }
+            }
+        });
     }
 }
 

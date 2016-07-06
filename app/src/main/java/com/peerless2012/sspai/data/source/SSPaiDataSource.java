@@ -1,8 +1,9 @@
 package com.peerless2012.sspai.data.source;
 
+import android.support.annotation.NonNull;
 import com.peerless2012.sspai.data.callback.SimpleCallBack;
 import com.peerless2012.sspai.domain.Article;
-import com.peerless2012.sspai.domain.NewsItem;
+import com.peerless2012.sspai.domain.ArticleDetail;
 import com.peerless2012.sspai.domain.NewsType;
 import com.peerless2012.sspai.domain.Topic;
 
@@ -17,7 +18,9 @@ import java.util.List;
  */
 public interface SSPaiDataSource {
 
-    void loadNavData(SimpleCallBack<List<Topic>> simpleCallBack);
+    void loadNavData(@NonNull SimpleCallBack<List<Topic>> simpleCallBack);
 
-    void loadNews(NewsType newsType, int pageIndex, boolean force,SimpleCallBack<List<Article>> callBack);
+    void loadNews(@NonNull NewsType newsType, int pageIndex, boolean force,@NonNull SimpleCallBack<List<Article>> callBack);
+
+    void loadNewsDetail(@NonNull Article article,@NonNull SimpleCallBack<ArticleDetail> callBack);
 }

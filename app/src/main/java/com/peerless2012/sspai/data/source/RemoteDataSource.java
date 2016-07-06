@@ -1,8 +1,9 @@
 package com.peerless2012.sspai.data.source;
 
+import android.support.annotation.NonNull;
 import com.peerless2012.sspai.data.callback.SimpleCallBack;
 import com.peerless2012.sspai.domain.Article;
-import com.peerless2012.sspai.domain.NewsItem;
+import com.peerless2012.sspai.domain.ArticleDetail;
 import com.peerless2012.sspai.domain.NewsType;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
  */
 public interface RemoteDataSource {
 
-    void loadNews(NewsType newsType, int pageIndex, SimpleCallBack<List<Article>> callBack);
+    void loadNews(@NonNull NewsType newsType, int pageIndex,@NonNull SimpleCallBack<List<Article>> callBack);
 
+    void loadNewsDetail(@NonNull Article article,@NonNull SimpleCallBack<ArticleDetail> callBack);
 }
