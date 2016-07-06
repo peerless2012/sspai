@@ -24,7 +24,6 @@
         app:HeightPercent="0.5">
         <ImageView
             android:id="@+id/news_img"
-            android:background="#FF0000"
             android:scaleType="centerCrop"
             android:src="@drawable/net"
             android:layout_width="match_parent"

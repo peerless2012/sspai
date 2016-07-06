@@ -2,18 +2,22 @@ package com.peerless2012.sspai.detail;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.peerless2012.sspai.R;
 import com.peerless2012.sspai.base.MVPActivity;
 import com.peerless2012.sspai.domain.Article;
+import com.peerless2012.sspai.domain.ArticleDetail;
 import com.peerless2012.sspai.domain.NewsItem;
 
 import java.io.IOException;
@@ -33,6 +37,8 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
 
     private WebView mNewsContent;
 
+    private ProgressBar mProgressBar;
+
     @Override
     protected void onSaveInstance(Bundle savedInstanceState) {
         mArticle = getIntent().getParcelableExtra(ARTILE_TAG);
@@ -49,6 +55,7 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
         mFab = getView(R.id.fab);
         mNewsImg = getView(R.id.news_img);
         mNewsContent = getView(R.id.news_content);
+        mProgressBar = getView(R.id.loading_progress);
 
         String imgUrl = mArticle.getImgUrl();
         if (imgUrl.endsWith(".gif")){
@@ -70,6 +77,14 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
             Ion.with(mNewsImg)
                     .load(imgUrl);
         }
+
+        WebSettings settings = mNewsContent.getSettings();
+        settings.setDefaultTextEncodingName("UTF-8");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+
+        }else {
+            settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        }
     }
 
     @Override
@@ -85,7 +100,8 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
 
     @Override
     protected void initData() {
-        mNewsContent.loadUrl(mArticle.getArticleUrl());
+        setTitle(mArticle.getTitle());
+        mPresenter.loadWebContent(mArticle);
     }
 
     public static void launch(Context context, Article article){
@@ -107,5 +123,27 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
     @Override
     public void setPresenter(NewsDetailContract.NewsDetailPresenter presenter) {
 
+    }
+
+    @Override
+    public void onStartLoad() {
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onWebLoaded(final ArticleDetail articleDetail) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mProgressBar.setVisibility(View.GONE);
+                mNewsContent.loadData(articleDetail.getArticleContent(),"text/html","UTF-8");
+            }
+        });
+    }
+
+    @Override
+    public void onLoadFailed(String errorMsg) {
+        mProgressBar.setVisibility(View.GONE);
+        toast(errorMsg);
     }
 }

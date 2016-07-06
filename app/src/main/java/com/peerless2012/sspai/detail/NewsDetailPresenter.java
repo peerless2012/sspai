@@ -2,7 +2,10 @@ package com.peerless2012.sspai.detail;
 
 import android.content.Context;
 
+import com.peerless2012.sspai.data.callback.SimpleCallBack;
 import com.peerless2012.sspai.data.source.SSPaiRepository;
+import com.peerless2012.sspai.domain.Article;
+import com.peerless2012.sspai.domain.ArticleDetail;
 
 /**
  * @author peerless2012
@@ -34,5 +37,15 @@ public class NewsDetailPresenter implements NewsDetailContract.NewsDetailPresent
         mSsPaiRepository = null;
         mNewsDetailView = null;
         mContext = null;
+    }
+
+    @Override
+    public void loadWebContent(Article article) {
+        mSsPaiRepository.loadNewsDetail(article, new SimpleCallBack<ArticleDetail>() {
+            @Override
+            public void onLoaded(ArticleDetail articleDetail) {
+                if (mNewsDetailView != null) mNewsDetailView.onWebLoaded(articleDetail);
+            }
+        });
     }
 }

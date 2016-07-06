@@ -6,6 +6,9 @@ import com.peerless2012.sspai.domain.Topic;
 import com.peerless2012.sspai.main.MainActivity;
 import com.peerless2012.sspai.R;
 import com.peerless2012.sspai.view.widget.SSPaiView;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
+
 import java.util.List;
 
 /**
@@ -17,6 +20,10 @@ import java.util.List;
  */
 public class SplashActivity extends MVPActivity<SplashContract.SplashView,SplashContract.SplashPresenter>
         implements Animator.AnimatorListener,SplashContract.SplashView {
+
+    private static final String APP_ID = "";
+
+    private IWXAPI mIwxapi;
 
     private SSPaiView mSSPaiView;
 
@@ -41,6 +48,8 @@ public class SplashActivity extends MVPActivity<SplashContract.SplashView,Splash
 
     @Override
     protected void initData() {
+        mIwxapi = WXAPIFactory.createWXAPI(this,APP_ID,true);
+        mIwxapi.registerApp(APP_ID);
         mPresenter.initData();
     }
 
