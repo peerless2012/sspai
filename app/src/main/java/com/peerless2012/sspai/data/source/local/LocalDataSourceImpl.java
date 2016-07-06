@@ -9,11 +9,13 @@ import com.google.gson.reflect.TypeToken;
 import com.peerless2012.sspai.R;
 import com.peerless2012.sspai.data.callback.SimpleCallBack;
 import com.peerless2012.sspai.data.source.LocalDataSource;
+import com.peerless2012.sspai.data.source.local.entry.ArticleDetailEntry;
 import com.peerless2012.sspai.data.source.local.entry.ArticleEntry;
 import com.peerless2012.sspai.data.threads.ExecutorCallBack;
 import com.peerless2012.sspai.data.threads.ExecutorRunnable;
 import com.peerless2012.sspai.data.threads.WorkExecutor;
 import com.peerless2012.sspai.domain.Article;
+import com.peerless2012.sspai.domain.ArticleDetail;
 import com.peerless2012.sspai.domain.NewsType;
 import com.peerless2012.sspai.domain.Topic;
 import java.io.InputStream;
@@ -34,11 +36,13 @@ public class LocalDataSourceImpl extends BaseLocalDataSource implements LocalDat
     private static volatile LocalDataSourceImpl sInst = null;  // <<< 这里添加了 volatile
 
     private Context mContext;
-    ArticleEntry mArticleEntry;
+    private ArticleEntry mArticleEntry;
+    private ArticleDetailEntry mArticleDetailEntry;
     public LocalDataSourceImpl(Context context) {
         super(SSPaiDBHelper.getInstance(context.getApplicationContext()));
         mContext = context.getApplicationContext();
         mArticleEntry = new ArticleEntry();
+        mArticleDetailEntry = new ArticleDetailEntry();
     }
 
     public static LocalDataSourceImpl getInstance(Context context) {
@@ -141,7 +145,48 @@ public class LocalDataSourceImpl extends BaseLocalDataSource implements LocalDat
         }
     }
 
+    @Override
+    public void loadNewsDetail(Article article, SimpleCallBack<ArticleDetail> callBack) {
+        SQLiteDatabase database = null;
+        Cursor cursor = null;
+        try {
+            database = getReadableDatabase();
+            cursor = database.query(ArticleDetailEntry.TABLE_NAME
+                    ,null,ArticleDetailEntry._ARTICLE_ID + " = ?"
+                    ,new String[]{article.getArticleId()},null,null,null);
+            if (cursor != null && cursor.getCount() > 0){
+                ArticleDetail articleDetail = mArticleDetailEntry.build(cursor);
+                callBack.onLoaded(articleDetail);
+            }else {
+                callBack.onLoaded(null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            callBack.onLoaded(null);
+        } finally {
+            closeCursor(cursor);
+            closeDatabase(database);
+        }
+    }
 
+    @Override
+    public void saveNewsDetail(ArticleDetail articleDetail) {
+        synchronized (LOCK){
+            SQLiteDatabase database = null;
+            try {
+                database = getReadableDatabase();
+                database.beginTransaction();
+                database.insert(ArticleDetailEntry.TABLE_NAME,
+                        null,mArticleDetailEntry.deconstruct(articleDetail));
+                database.setTransactionSuccessful();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (database != null) database.endTransaction();
+                closeDatabase(database);
+            }
+        }
+    }
 }
 
 

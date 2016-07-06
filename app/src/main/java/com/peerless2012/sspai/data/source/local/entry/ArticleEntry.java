@@ -15,13 +15,6 @@ import com.peerless2012.sspai.domain.Article;
  * @Description :
  */
 public class ArticleEntry extends BaseEntryBuilder<Article> implements BaseColumns {
-    private static final String INTEGER_TYPE = " INTEGER";
-
-    private static final String CHAR_TYPE = " CHAR";
-
-    private static final String BOOLEAN_TYPE = " INTEGER";
-
-    private static final String COMMA_SEP = ",";
 
     public static final String TABLE_NAME = "articles";
 
@@ -35,17 +28,17 @@ public class ArticleEntry extends BaseEntryBuilder<Article> implements BaseColum
     public static final String _DESC = "_desc";
 
 
-    public static final String CREATE_SQL = "CREATE TABLE IF NOT EXISTS "+ TABLE_NAME +" ("
-            + _ID +INTEGER_TYPE+ " PRIMARY KEY AUTOINCREMENT" + COMMA_SEP
-            +_TOPIC_ID + INTEGER_TYPE + COMMA_SEP
-            + _PUBLISH_TIME  + CHAR_TYPE + COMMA_SEP
-            + _NEWS_TYPE_ID  + INTEGER_TYPE + COMMA_SEP
-            + _ARTICLE_ID  + CHAR_TYPE + COMMA_SEP
-            + _ARTICLE_URL  + CHAR_TYPE + COMMA_SEP
-            + _IMG_URL  + CHAR_TYPE + COMMA_SEP
-            + _TITLE  + CHAR_TYPE + COMMA_SEP
+    public static final String CREATE_SQL = SQL_HEADER + TABLE_NAME + SQL_PRE
+            + _ID +INTEGER_TYPE+ PRIMARY_KEY +AUTOINCREMENT
+            + COMMA_SEP + _TOPIC_ID + INTEGER_TYPE
+            + COMMA_SEP + _PUBLISH_TIME  + CHAR_TYPE
+            + COMMA_SEP + _NEWS_TYPE_ID  + INTEGER_TYPE
+            + COMMA_SEP + _ARTICLE_ID  + CHAR_TYPE
+            + COMMA_SEP + _ARTICLE_URL  + CHAR_TYPE
+            + COMMA_SEP + _IMG_URL  + CHAR_TYPE
+            + COMMA_SEP + _TITLE  + CHAR_TYPE + COMMA_SEP
             + _DESC  + CHAR_TYPE
-            +");";
+            +SQL_AFTER;
 
     private int idIndex = -1;
     private int topicIdIndex = -1;
@@ -56,25 +49,6 @@ public class ArticleEntry extends BaseEntryBuilder<Article> implements BaseColum
     private int imgUrlIndex = -1;
     private int titleIndex = -1;
     private int descIndex = -1;
-
-    @Override
-    public Article build(Cursor cursor) {
-        generateIndex(cursor);
-        return generateEntry(cursor);
-    }
-
-    @Override
-    public List<Article> buildAll(Cursor cursor) {
-        if (cursor == null || cursor.getCount() == 0) return null;
-        generateIndex(cursor);
-        cursor.moveToFirst();
-        List<Article> articles = new ArrayList<Article>(cursor.getCount());
-        do {
-            articles.add(generateEntry(cursor));
-        }while (cursor.moveToNext());
-        return articles;
-    }
-
 
     @Override
     public ContentValues deconstruct(Article article) {
@@ -106,15 +80,28 @@ public class ArticleEntry extends BaseEntryBuilder<Article> implements BaseColum
     @Override
     protected Article generateEntry(Cursor cursor) {
         Article article = new Article();
-        article.setId(cursor.getInt(idIndex));
-        article.setTopicId(cursor.getInt(topicIdIndex));
-        article.setNewsTypeId(cursor.getInt(newsTypeIdIndex));
-        article.setArticleId(cursor.getString(articleIdIndex));
-        article.setPublishTime(cursor.getString(publishTimeIndex));
-        article.setArticleUrl(cursor.getString(articleUrlIndex));
-        article.setImgUrl(cursor.getString(imgUrlIndex));
-        article.setTitle(cursor.getString(titleIndex));
-        article.setDesc(cursor.getString(descIndex));
+        if (idIndex >= 0) article.setId(cursor.getInt(idIndex));
+        if (topicIdIndex >= 0) article.setTopicId(cursor.getInt(topicIdIndex));
+        if (newsTypeIdIndex >= 0) article.setNewsTypeId(cursor.getInt(newsTypeIdIndex));
+        if (articleIdIndex >= 0) article.setArticleId(cursor.getString(articleIdIndex));
+        if (publishTimeIndex >= 0) article.setPublishTime(cursor.getString(publishTimeIndex));
+        if (articleUrlIndex >= 0) article.setArticleUrl(cursor.getString(articleUrlIndex));
+        if (imgUrlIndex >= 0) article.setImgUrl(cursor.getString(imgUrlIndex));
+        if (titleIndex >= 0) article.setTitle(cursor.getString(titleIndex));
+        if (descIndex >= 0) article.setDesc(cursor.getString(descIndex));
         return article;
+    }
+
+    @Override
+    protected void resetIndexs() {
+        idIndex = -1;
+        topicIdIndex = -1;
+        newsTypeIdIndex = -1;
+        articleIdIndex = -1;
+        publishTimeIndex = -1;
+        articleUrlIndex = -1;
+        imgUrlIndex = -1;
+        titleIndex = -1;
+        descIndex = -1;
     }
 }

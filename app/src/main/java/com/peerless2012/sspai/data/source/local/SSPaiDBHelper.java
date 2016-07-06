@@ -3,6 +3,7 @@ package com.peerless2012.sspai.data.source.local;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import com.peerless2012.sspai.data.source.local.entry.ArticleDetailEntry;
 import com.peerless2012.sspai.data.source.local.entry.ArticleEntry;
 
 /**
@@ -10,7 +11,7 @@ import com.peerless2012.sspai.data.source.local.entry.ArticleEntry;
  * @Email peerless2012@126.com
  * @DateTime 2016/7/4 9:39
  * @Version V1.0
- * @Description :
+ * @Description : 数据库
  */
 public class SSPaiDBHelper extends SQLiteOpenHelper{
     private static volatile SSPaiDBHelper sInst = null;  // <<< 这里添加了 volatile
@@ -38,6 +39,7 @@ public class SSPaiDBHelper extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(ArticleEntry.CREATE_SQL);
+        db.execSQL(ArticleDetailEntry.CREATE_SQL);
     }
 
     @Override
