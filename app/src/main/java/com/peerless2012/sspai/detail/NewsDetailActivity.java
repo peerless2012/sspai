@@ -6,9 +6,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -80,12 +82,18 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
 
         WebSettings settings = mNewsContent.getSettings();
         settings.setDefaultTextEncodingName("UTF-8");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
-
-        }else {
-            settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+//            settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
+//            settings.setLoadWithOverviewMode(true);
+//            settings.setSupportZoom(false);
+//        }else {
+//            settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+//        }
     }
+
+    private boolean isRealod = true;
+
+    private int sceenWidth = 0;
 
     @Override
     protected void initListener() {
@@ -136,7 +144,7 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
             @Override
             public void run() {
                 mProgressBar.setVisibility(View.GONE);
-                mNewsContent.loadData(articleDetail.getArticleContent(),"text/html","UTF-8");
+                mNewsContent.loadData(articleDetail.getArticleContent(),"text/html; charset=UTF-8", null);
             }
         });
     }

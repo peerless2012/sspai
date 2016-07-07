@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import com.peerless2012.sspai.domain.NewsType;
 import com.peerless2012.sspai.main.news.NewsFragment;
-
 import java.util.List;
 
 /**

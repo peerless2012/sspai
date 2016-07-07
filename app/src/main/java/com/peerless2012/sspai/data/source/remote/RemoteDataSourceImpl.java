@@ -231,6 +231,14 @@ public class RemoteDataSourceImpl implements RemoteDataSource {
                 if (response != null && response.code() == 200){
                     Document document = Jsoup.parse(response.body().string(),"");
                     Element first = document.getElementsByClass("content").first();
+                    // http://bbs.csdn.net/topics/390844510
+                    Elements ele_Img = first.getElementsByTag("img");
+                    if (ele_Img.size() != 0){
+                        for (Element e_Img : ele_Img) {
+                            e_Img.attr("style", "width:100%");
+                        }
+                    }
+
                     ArticleDetail articleDetail = new ArticleDetail();
                     articleDetail.setArticleId(article.getArticleId());
                     articleDetail.setArticleContent(first.html());
