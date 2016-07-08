@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AppCompatDialog;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -14,6 +17,7 @@ import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.peerless2012.sspai.App;
 import com.peerless2012.sspai.R;
 import com.peerless2012.sspai.base.MVPActivity;
 import com.peerless2012.sspai.common.utils.ShareUtils;
@@ -41,6 +45,8 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
 
     private ProgressBar mProgressBar;
 
+    private NestedScrollView mNestedScrollView;
+
     @Override
     protected void onSaveInstance(Bundle savedInstanceState) {
         mArticle = getIntent().getParcelableExtra(ARTICLE_TAG);
@@ -58,6 +64,8 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
         mNewsImg = getView(R.id.news_img);
         mNewsContent = getView(R.id.news_content);
         mProgressBar = getView(R.id.loading_progress);
+        mNestedScrollView = getView(R.id.content_scrollview);
+        mNestedScrollView.setFillViewport(true);
         String imgUrl = mArticle.getImgUrl();
         if (imgUrl.endsWith(".gif")){
             Glide.with(this)
@@ -90,13 +98,7 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
         // 试了很多方法，并没有什么卵用
         //设置数据库缓存路径
         //设置  Application Caches 缓存目录
-        File[] cacheDirs = ContextCompat.getExternalCacheDirs(this);
-        File cacheDirPath = null;
-        if (cacheDirs != null && cacheDirs.length > 0){
-            cacheDirPath = cacheDirs[cacheDirs.length -1];
-        }else {
-            cacheDirPath = getCacheDir();
-        }
+        File cacheDirPath = ((App)getApplication()).getAppCacheDir();
         //开启 Application Caches 功能
         settings.setAppCacheEnabled(true);
         settings.setAppCachePath(cacheDirPath.getAbsolutePath());
@@ -169,6 +171,7 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
             @Override
             public void run() {
                 mProgressBar.setVisibility(View.GONE);
+                mNestedScrollView.setFillViewport(false);
                 mNewsContent.loadData(articleDetail.getArticleContent(),"text/html; charset=UTF-8", null);
             }
         });

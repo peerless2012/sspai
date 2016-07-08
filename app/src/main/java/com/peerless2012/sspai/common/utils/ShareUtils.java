@@ -9,7 +9,6 @@ import android.widget.Toast;
 import com.peerless2012.sspai.R;
 import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
-import com.tencent.mm.sdk.modelmsg.WXTextObject;
 import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
@@ -23,6 +22,7 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
  * Fuck,在开发平台上填写签名
  * 1 必须是md5值（用keytool获取到的有md5，sha1，sha256）
  * 2 md5不能有冒号分割（建议小写或者用官方提供的获取签名的工具来获取）
+ * 参考文档：https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419317340&token=045623786463566a54bde5b86a1d5fc3e79fc1e0&lang=zh_CN
  */
 public class ShareUtils {
 
@@ -69,26 +69,6 @@ public class ShareUtils {
         return api;
     }
 
-    public static void share(){
-        // 初始化WXTextObject对象
-        WXTextObject textObject = new WXTextObject();
-        textObject.text = "文本";
-
-        // 用WXTextObject对象初始化一个WXMediaMessage对象
-        WXMediaMessage mediaMessage = new WXMediaMessage();
-        mediaMessage.mediaObject = textObject;
-        mediaMessage.description = "描述";
-
-        // 构造请求
-        SendMessageToWX.Req req = new SendMessageToWX.Req();
-        req.transaction = String.valueOf(System.currentTimeMillis());
-        req.message = mediaMessage;
-
-        //调用接口发送
-        boolean sendReq = api.sendReq(req);
-        Log.i(TAG, "share: sendReq = "+sendReq);
-    }
-
     public static void shareWeb(Context context,String title,String desc,String url,@Scene int scene){
         if (!checkForSupport(context)) return;
         WXWebpageObject webPage = new WXWebpageObject();
@@ -110,6 +90,11 @@ public class ShareUtils {
         Log.i(TAG, "shareWeb: sendReq = "+sendReq);
     }
 
+    /**
+     * 根据scene创建一个transaction字符串，从微信返回的时候会携带这个字符串
+     * @param scene
+     * @return
+     */
     private static String buildTransaction(@Scene int scene) {
         String tag = null;
         if (scene == SendMessageToWX.Req.WXSceneSession){
