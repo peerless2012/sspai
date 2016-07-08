@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:orientation="horizontal"
-    card_view:cardElevation="10dp"
+    card_view:cardElevation="5dp"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
     card_view:cardCornerRadius="5dp" >
@@ -25,7 +25,6 @@
         <ImageView
             android:id="@+id/news_img"
             android:scaleType="centerCrop"
-            android:src="@drawable/net"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </com.peerless2012.sspai.view.widget.PercentFrameLayout>
