@@ -16,8 +16,12 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.peerless2012.sspai.R;
 import com.peerless2012.sspai.base.MVPActivity;
+import com.peerless2012.sspai.common.utils.ShareUtils;
 import com.peerless2012.sspai.domain.Article;
 import com.peerless2012.sspai.domain.ArticleDetail;
+import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+
 import java.io.File;
 import java.io.IOException;
 import pl.droidsonroids.gif.GifDrawable;
@@ -25,7 +29,7 @@ import pl.droidsonroids.gif.GifDrawable;
 public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetailView,NewsDetailContract.NewsDetailPresenter>
                                 implements NewsDetailContract.NewsDetailView{
     // http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2015/0417/2736.html
-    public final static String ARTILE_TAG = "artile_tag";
+    public final static String ARTICLE_TAG = "article_tag";
 
     private Article mArticle;
 
@@ -39,7 +43,7 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
 
     @Override
     protected void onSaveInstance(Bundle savedInstanceState) {
-        mArticle = getIntent().getParcelableExtra(ARTILE_TAG);
+        mArticle = getIntent().getParcelableExtra(ARTICLE_TAG);
         super.onSaveInstance(savedInstanceState);
     }
 
@@ -54,7 +58,6 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
         mNewsImg = getView(R.id.news_img);
         mNewsContent = getView(R.id.news_content);
         mProgressBar = getView(R.id.loading_progress);
-
         String imgUrl = mArticle.getImgUrl();
         if (imgUrl.endsWith(".gif")){
             Glide.with(this)
@@ -83,6 +86,8 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
         settings.setDomStorageEnabled(true);
         //开启 database storage API 功能
         settings.setDatabaseEnabled(true);
+
+        // 试了很多方法，并没有什么卵用
         //设置数据库缓存路径
         //设置  Application Caches 缓存目录
         File[] cacheDirs = ContextCompat.getExternalCacheDirs(this);
@@ -92,9 +97,12 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
         }else {
             cacheDirPath = getCacheDir();
         }
-        settings.setAppCachePath(new File(cacheDirPath,"webview").getAbsolutePath());
         //开启 Application Caches 功能
         settings.setAppCacheEnabled(true);
+        settings.setAppCachePath(cacheDirPath.getAbsolutePath());
+        settings.setDatabasePath(cacheDirPath.getAbsolutePath());
+        settings.setDatabaseEnabled(true);
+        settings.setAllowFileAccess(true);
     }
 
     private boolean isRealod = true;
@@ -106,10 +114,14 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                ShareUtils.shareWeb(NewsDetailActivity.this
+                        ,mArticle.getTitle()
+                        ,mArticle.getDesc()
+                        ,mArticle.getArticleUrl()
+                        , SendMessageToWX.Req.WXSceneFavorite);
             }
         });
+        IWXAPI api = ShareUtils.getApi();
     }
 
     @Override
@@ -127,7 +139,7 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
 
     public static void launch(Context context, Article article){
         Intent intent = new Intent(context,NewsDetailActivity.class);
-        intent.putExtra(ARTILE_TAG,article);
+        intent.putExtra(ARTICLE_TAG,article);
         context.startActivity(intent);
     }
 

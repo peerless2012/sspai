@@ -11,4 +11,13 @@
     <string name="refresh_fail">刷新失败</string>
     <string name="load_success">加载成功</string>
     <string name="load_fail">加载失败</string>
+
+    <!-- 微信分享 -->
+    <string name="type_share">分享</string>
+    <string name="type_favorite">收藏</string>
+
+    <string name="errcode_success">%1$s成功</string>
+    <string name="errcode_cancel">%1$s取消</string>
+    <string name="errcode_deny">%1$s被拒绝</string>
+    <string name="errcode_unknown">%1$s返回</string>
 </resources>

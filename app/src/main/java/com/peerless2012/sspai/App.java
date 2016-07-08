@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat;
 import com.orhanobut.logger.AndroidLogTool;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
+import com.peerless2012.sspai.common.utils.ShareUtils;
 import java.io.File;
 
 /**
@@ -40,6 +41,7 @@ public class App extends Application{
                 .logLevel(LogLevel.NONE)        // default LogLevel.FULL
                 .methodOffset(2)                // default 0
                 .logTool(new AndroidLogTool()); // custom log tool, optional
+        ShareUtils.install(this);
     }
 
     public File getAppCacheDir(){
