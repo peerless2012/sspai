@@ -7,12 +7,20 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+
+        <!--Glide 使用-->
+        <meta-data
+            android:name="com.peerless2012.sspai.common.glidemodule.OkHttpGlideModule"
+            android:value="GlideModule"/>
+
         <activity
             android:name=".splash.SplashActivity"
             android:theme="@style/AppTheme.NoActionBar.FullScreen">

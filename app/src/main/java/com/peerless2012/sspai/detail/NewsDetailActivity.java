@@ -2,31 +2,24 @@ package com.peerless2012.sspai.detail;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.peerless2012.sspai.R;
 import com.peerless2012.sspai.base.MVPActivity;
 import com.peerless2012.sspai.domain.Article;
 import com.peerless2012.sspai.domain.ArticleDetail;
-import com.peerless2012.sspai.domain.NewsItem;
-
 import java.io.File;
 import java.io.IOException;
-
 import pl.droidsonroids.gif.GifDrawable;
 
 public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetailView,NewsDetailContract.NewsDetailPresenter>
@@ -64,14 +57,13 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
 
         String imgUrl = mArticle.getImgUrl();
         if (imgUrl.endsWith(".gif")){
-            Ion.with(this)
+            Glide.with(this)
                     .load(imgUrl)
-                    .asByteArray()
-                    .setCallback(new FutureCallback<byte[]>() {
+                    .downloadOnly(new SimpleTarget<File>() {
                         @Override
-                        public void onCompleted(Exception e, byte[] bytes) {
+                        public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation) {
                             try {
-                                GifDrawable gifDrawable = new GifDrawable(bytes);
+                                GifDrawable gifDrawable = new GifDrawable(resource);
                                 mNewsImg.setImageDrawable(gifDrawable);
                             } catch (IOException e1) {
                                 e1.printStackTrace();
@@ -79,8 +71,9 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
                         }
                     });
         }else {
-            Ion.with(mNewsImg)
-                    .load(imgUrl);
+            Glide.with(this)
+                    .load(imgUrl)
+                    .into(mNewsImg);
         }
 
         WebSettings settings = mNewsContent.getSettings();
@@ -102,7 +95,6 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
         settings.setAppCachePath(new File(cacheDirPath,"webview").getAbsolutePath());
         //开启 Application Caches 功能
         settings.setAppCacheEnabled(true);
-
     }
 
     private boolean isRealod = true;
