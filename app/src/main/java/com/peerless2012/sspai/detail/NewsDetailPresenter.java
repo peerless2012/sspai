@@ -44,7 +44,13 @@ public class NewsDetailPresenter implements NewsDetailContract.NewsDetailPresent
         mSsPaiRepository.loadNewsDetail(article, new SimpleCallBack<ArticleDetail>() {
             @Override
             public void onLoaded(ArticleDetail articleDetail) {
-                if (mNewsDetailView != null) mNewsDetailView.onWebLoaded(articleDetail);
+                if (mNewsDetailView != null){
+                    if (articleDetail != null){
+                        mNewsDetailView.onWebLoaded(articleDetail);
+                    }else {
+                        mNewsDetailView.onLoadFailed("获取失败！");
+                    }
+                }
             }
         });
     }

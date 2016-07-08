@@ -44,6 +44,7 @@ public abstract class BaseEntryBuilder<T> {
     public T build(Cursor cursor){
         if (cursor == null || cursor.getCount() == 0) return null;
         generateIndex(cursor);
+        cursor.moveToFirst();
         T t = generateEntry(cursor);
         resetIndexs();
         return t;

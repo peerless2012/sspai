@@ -6,7 +6,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -22,13 +24,14 @@ import com.peerless2012.sspai.domain.Article;
 import com.peerless2012.sspai.domain.ArticleDetail;
 import com.peerless2012.sspai.domain.NewsItem;
 
+import java.io.File;
 import java.io.IOException;
 
 import pl.droidsonroids.gif.GifDrawable;
 
 public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetailView,NewsDetailContract.NewsDetailPresenter>
                                 implements NewsDetailContract.NewsDetailView{
-
+    // http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2015/0417/2736.html
     public final static String ARTILE_TAG = "artile_tag";
 
     private Article mArticle;
@@ -82,13 +85,24 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
 
         WebSettings settings = mNewsContent.getSettings();
         settings.setDefaultTextEncodingName("UTF-8");
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
-//            settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
-//            settings.setLoadWithOverviewMode(true);
-//            settings.setSupportZoom(false);
-//        }else {
-//            settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-//        }
+        settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);  //设置 缓存模式
+        // 开启 DOM storage API 功能
+        settings.setDomStorageEnabled(true);
+        //开启 database storage API 功能
+        settings.setDatabaseEnabled(true);
+        //设置数据库缓存路径
+        //设置  Application Caches 缓存目录
+        File[] cacheDirs = ContextCompat.getExternalCacheDirs(this);
+        File cacheDirPath = null;
+        if (cacheDirs != null && cacheDirs.length > 0){
+            cacheDirPath = cacheDirs[cacheDirs.length -1];
+        }else {
+            cacheDirPath = getCacheDir();
+        }
+        settings.setAppCachePath(new File(cacheDirPath,"webview").getAbsolutePath());
+        //开启 Application Caches 功能
+        settings.setAppCacheEnabled(true);
+
     }
 
     private boolean isRealod = true;
@@ -110,6 +124,13 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
     protected void initData() {
         setTitle(mArticle.getTitle());
         mPresenter.loadWebContent(mArticle);
+    }
+
+    @Override
+    protected void onDestroy() {
+        // https://www.zhihu.com/question/31316646
+        mNewsContent.destroy();
+        super.onDestroy();
     }
 
     public static void launch(Context context, Article article){
