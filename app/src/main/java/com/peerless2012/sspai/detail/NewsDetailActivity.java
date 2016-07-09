@@ -3,6 +3,7 @@ package com.peerless2012.sspai.detail;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -146,12 +147,12 @@ public class NewsDetailActivity extends MVPActivity<NewsDetailContract.NewsDetai
     }
 
     @Override
-    public NewsDetailContract.NewsDetailView getPresenterView() {
+    public @NonNull NewsDetailContract.NewsDetailView getPresenterView() {
         return this;
     }
 
     @Override
-    public NewsDetailContract.NewsDetailPresenter getPresenter() {
+    public @NonNull NewsDetailContract.NewsDetailPresenter getPresenter() {
         return new NewsDetailPresenter(this);
     }
 

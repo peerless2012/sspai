@@ -2,6 +2,7 @@ package com.peerless2012.sspai.main.news;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -104,12 +105,12 @@ public class NewsFragment extends MVPFragment<NewsContract.NewsView,NewsContract
     }
 
     @Override
-    public NewsContract.NewsView getPresenterView() {
+    public @NonNull NewsContract.NewsView getPresenterView() {
         return this;
     }
 
     @Override
-    public NewsContract.NewsPresenter getPresenter() {
+    public @NonNull NewsContract.NewsPresenter getPresenter() {
         return new NewsPresenter(getContext(),mNewsType);
     }
 

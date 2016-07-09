@@ -1,6 +1,7 @@
 package com.peerless2012.sspai.base;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +21,12 @@ public abstract class MVPFragment<V,P extends BasePresenter<V>> extends BaseFrag
     protected void onSaveInstance(Bundle savedInstanceState) {
         super.onSaveInstance(savedInstanceState);
         mPresenter = getPresenter();
-        if (mPresenter != null) mPresenter.attach(getPresenterView());
+        mPresenter.attach(getPresenterView());
     }
 
-    public abstract V getPresenterView();
+    public abstract @NonNull V getPresenterView();
 
-    public abstract P getPresenter();
+    public abstract @NonNull P getPresenter();
 
     @Override
     public void onDestroy() {

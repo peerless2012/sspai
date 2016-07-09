@@ -1,6 +1,8 @@
 package com.peerless2012.sspai.splash;
 
 import android.animation.Animator;
+import android.support.annotation.NonNull;
+
 import com.peerless2012.sspai.base.MVPActivity;
 import com.peerless2012.sspai.domain.Topic;
 import com.peerless2012.sspai.main.MainActivity;
@@ -54,12 +56,12 @@ public class SplashActivity extends MVPActivity<SplashContract.SplashView,Splash
     }
 
     @Override
-    public SplashContract.SplashView getPresenterView() {
+    public @NonNull SplashContract.SplashView getPresenterView() {
         return this;
     }
 
     @Override
-    public SplashContract.SplashPresenter getPresenter() {
+    public @NonNull SplashContract.SplashPresenter getPresenter() {
         return new SplashPresenter(this);
     }
 

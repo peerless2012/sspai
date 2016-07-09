@@ -2,6 +2,7 @@ package com.peerless2012.sspai.base;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
 
 /**
  * @author peerless2012
@@ -19,12 +20,12 @@ public abstract class MVPActivity<V,P extends BasePresenter<V>> extends BaseActi
     protected void onSaveInstance(Bundle savedInstanceState) {
         super.onSaveInstance(savedInstanceState);
         mPresenter = getPresenter();
-        if (mPresenter != null) mPresenter.attach(getPresenterView());
+        mPresenter.attach(getPresenterView());
     }
 
-    public abstract V getPresenterView();
+    public abstract @NonNull V getPresenterView();
 
-    public abstract P getPresenter();
+    public abstract @NonNull P getPresenter();
 
     @Override
     protected void onDestroy() {
