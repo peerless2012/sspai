@@ -6,7 +6,7 @@
 本项目主要为MVP练手项目。
 
 ## 下载地址
-[点我下载](稍后)
+[点我下载](https://raw.githubusercontent.com/peerless2012/sspai/master/data/sspai-release.apk)
 
 ## 效果图
 

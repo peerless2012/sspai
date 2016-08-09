@@ -15,41 +15,40 @@ android {
     signingConfigs {
         def Properties localProps = new Properties()
         localProps.load(new FileInputStream(file('../local.properties')))
-        def Properties keyProps = new Properties()
+        def Properties debugKeyProps = new Properties()
+        def Properties releaseKeyProps = new Properties()
 
         // 如果读取不到'keystore.props.file'属性，就使用debug keystore
-        if (localProps['keystore.props.file']) {
-            keyProps.load(new FileInputStream(file(localProps['keystore.props.file'])))
-        } else {
-            keyProps["store"] = 'D:/develop/keystore/debug.keystore'
-            keyProps["alias"] = 'androiddebugkey'
-            keyProps["storePass"] = 'android'
-            keyProps["pass"] = 'android'
-        }
+        debugKeyProps.load(new FileInputStream(file(localProps['keystore.debug.props.file'])))
+        releaseKeyProps.load(new FileInputStream(file(localProps['keystore.release.props.file'])))
+
 
         debug {
-            storeFile file(keyProps["store"])
-            keyAlias keyProps["alias"]
-            storePassword keyProps["storePass"]
-            keyPassword keyProps["pass"]
+            assert localProps['keystore.debug.props.file'];
+            storeFile file(debugKeyProps["store"])
+            keyAlias debugKeyProps["alias"]
+            storePassword debugKeyProps["storePass"]
+            keyPassword debugKeyProps["pass"]
         }
 
         release {
             // release版本使用assert确保存在该属性否则报错，避免错误打包
-            assert localProps['keystore.props.file'];
-            storeFile file(keyProps["store"])
-            keyAlias keyProps["alias"]
-            storePassword keyProps["storePass"]
-            keyPassword keyProps["pass"]
+            assert localProps['keystore.release.props.file'];
+            storeFile file(releaseKeyProps["store"])
+            keyAlias releaseKeyProps["alias"]
+            storePassword releaseKeyProps["storePass"]
+            keyPassword releaseKeyProps["pass"]
         }
     }
 
     buildTypes {
         debug {
             minifyEnabled false
+            signingConfig signingConfigs.debug
         }
         release {
             minifyEnabled true
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
